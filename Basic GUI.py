@@ -1,6 +1,19 @@
 from customtkinter import *
 from PIL import Image
-
+from CTkMessagebox import *
+def login():
+    msg = CTkMessagebox(title="Welcome", message="Welcome!!!",icon="check")
+    if msg.get() == "Ok":
+        main.destroy()
+def error():
+    msg1 = CTkMessagebox(title="Error", message="Incorrect Username or Password!!!",icon="cancel",option_1="Ok", option_2="Retry")
+    if msg1.get() == "Ok":
+        main.destroy()
+def check():
+    if usrname_entry.get() == "kingshuk" and passwd_entry.get() == "password":
+        login()
+    else:
+        error()
 main = CTk()
 main.title("Login Page")
 main.config(bg="white")
@@ -29,7 +42,7 @@ cr_acc = CTkLabel(frame1,text="Create Account!",text_color="black",cursor="hand2
 cr_acc.grid(row=3,column=0,sticky="w",pady=20,padx=40)
 
 l_btn = CTkButton(frame1,text="Login",font=("",15,"bold"),height=40,width=60,fg_color="#0085FF",cursor="hand2",
-                  corner_radius=15)
+                  corner_radius=15,command=check)
 l_btn.grid(row=3,column=0,sticky="ne",pady=20, padx=35)
 
 main.mainloop()
