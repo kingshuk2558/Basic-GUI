@@ -1,0 +1,109 @@
+from customtkinter import *
+from PIL import Image, ImageTk
+from CTkMessagebox import CTkMessagebox
+
+def logout():
+    msg = CTkMessagebox(title="Logout Confirmation", message="Are you sure you want to logout?", icon="question", option_1="Yes", option_2="No")
+    if msg.get() == "Yes":
+        homepage.destroy()
+        show_login()
+
+def login():
+    global homepage
+    homepage = CTk()
+    homepage.title("Matrimonial Site")
+    homepage.geometry("500x600")
+    homepage.config(bg="white")
+    homepage.resizable(False, False)
+
+    welcome_label = CTkLabel(homepage, text=f"Welcome, {username}!", text_color="black", font=("", 24, "bold"))
+    welcome_label.pack(pady=20)
+
+    matches_frame = CTkFrame(homepage, fg_color="#F0F0F0", width=400, corner_radius=15)
+    matches_frame.pack(pady=20, padx=10, fill=BOTH, expand=True)
+
+    matches_label = CTkLabel(matches_frame, text="Potential Matches", text_color="#0085FF", font=("", 18, "bold"))
+    matches_label.pack(pady=10)
+
+    matches_list = [
+        {"name": "Alice", "age": 28, "location": "New York", "image": r"C:\Users\a0504897\Downloads\alice.jpg"},
+        {"name": "Bob", "age": 32, "location": "Los Angeles", "image": r"C:\Users\a0504897\Downloads\bob.jpg"},
+        {"name": "Charlie", "age": 30, "location": "Chicago", "image": r"C:\Users\a0504897\Downloads\charlie.jpg"},
+    ]
+
+    for match in matches_list:
+        try:
+            profile_img = CTkImage(dark_image=Image.open(match["image"]), size=(60, 60))
+        except FileNotFoundError:
+            profile_img = None
+
+        match_frame = CTkFrame(matches_frame, fg_color="white", corner_radius=10, height=100)
+        match_frame.pack(fill=X, padx=10, pady=5)
+
+        match_img_label = CTkLabel(match_frame, image=profile_img, text="")
+        match_img_label.grid(row=0, column=0, rowspan=2, padx=10, pady=10)
+
+        match_label = CTkLabel(match_frame, text=f"{match['name']}, {match['age']} - {match['location']}", text_color="black", font=("", 14))
+        match_label.grid(row=0, column=1, sticky="w", padx=10, pady=(15, 0))
+
+    logout_button = CTkButton(homepage, text="Logout", font=("", 14), height=30, width=100, fg_color="#FF6347", cursor="hand2", corner_radius=10, command=logout)
+    logout_button.pack(pady=20)
+
+    homepage.mainloop()
+
+def error():
+    msg1 = CTkMessagebox(title="Error", message="Incorrect Username or Password!!!", icon="cancel", option_1="Ok", option_2="Retry")
+    if msg1.get() == "Ok":
+        main.destroy()
+
+def check():
+    global username
+    username = usrname_entry.get()
+    password = passwd_entry.get()
+    if username == "kingshuk" and password == "password":
+        main.destroy()
+        login()
+    else:
+        error()
+
+def show_login():
+    global main, usrname_entry, passwd_entry
+
+    main = CTk()
+    main.title("Login Page")
+    main.config(bg="white")
+    main.resizable(False, False)
+
+    try:
+        bg_img = CTkImage(dark_image=Image.open(r"C:\Users\a0504897\Downloads\bg1.jpg"), size=(500, 500))
+    except FileNotFoundError:
+        print("Background image not found. Please check the path.")
+        return
+
+    bg_lab = CTkLabel(main, image=bg_img, text="")
+    bg_lab.grid(row=0, column=0)
+
+    frame1 = CTkFrame(main, fg_color="#D9D9D9", bg_color="white", height=350, width=300, corner_radius=20)
+    frame1.grid(row=0, column=1, padx=40)
+
+    title = CTkLabel(frame1, text="Welcome Back! \nLogin to Account", text_color="black", font=("", 24, "bold"))
+    title.grid(row=0, column=0, sticky="nw", pady=30, padx=10)
+
+    usrname_entry = CTkEntry(frame1, text_color="white", placeholder_text="Username", fg_color="black", placeholder_text_color="white",
+                             font=("", 16, "bold"), width=200, corner_radius=15, height=45)
+    usrname_entry.grid(row=1, column=0, sticky="nwe", padx=30)
+
+    passwd_entry = CTkEntry(frame1, text_color="white", placeholder_text="Password", fg_color="black", placeholder_text_color="white",
+                            font=("", 16, "bold"), width=200, corner_radius=15, height=45, show="*")
+    passwd_entry.grid(row=2, column=0, sticky="nwe", padx=30, pady=20)
+
+    cr_acc = CTkLabel(frame1, text="Create Account!", text_color="black", cursor="hand2", font=("", 15))
+    cr_acc.grid(row=3, column=0, sticky="w", pady=20, padx=40)
+
+    l_btn = CTkButton(frame1, text="Login", font=("", 15, "bold"), height=40, width=60, fg_color="#0085FF", cursor="hand2",
+                      corner_radius=15, command=check)
+    l_btn.grid(row=3, column=0, sticky="ne", pady=20, padx=35)
+
+    main.mainloop()
+
+show_login()
